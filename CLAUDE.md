@@ -23,3 +23,15 @@ Guidance for Claude Code when working in this repository.
 - No backend, no database. Fully static site.
 - A toggle for light and dark theme, with the choice remembered
   across visits.
+
+## Outline & Visual Direction
+
+- Single-page tool portal: header (title + theme toggle) on top, a left-hand nav listing available tools, and a main panel to the right.
+- Clicking a nav item opens that tool's card in the main panel. Clicking the same nav item again (or the card's close button) closes it, returning the main panel to its empty state. Only one tool card is open at a time.
+- Minimal look: neutral background, single accent color, generous spacing, no decorative chrome. Styled entirely with Tailwind utility classes.
+
+## Feature Plan
+
+- [x] Phase 1 — Shell & navigation: page scaffold, header with theme toggle (persisted via `localStorage`), nav with placeholder tool cards that open and close correctly.
+- [ ] Phase 2 — Real tool logic: implement actual functionality behind each placeholder card.
+- [ ] Phase 3 — Polish: refine styling, responsiveness, accessibility.
