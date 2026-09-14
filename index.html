@@ -69,7 +69,15 @@
           <h2 class="font-medium">Beam Deflection</h2>
           <button type="button" class="close-card-btn text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" aria-label="Close">✕</button>
         </div>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Cantilever beam — fixed at one end, free at the other — under a point load at the free end.</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-1">
+          A cantilever beam is fixed at one end and free at the other — think of a diving board, or a balcony.
+          Push down on the free end, and it bends. Engineers calculate exactly how much with one classic formula:
+        </p>
+        <p class="text-sm font-mono text-slate-700 dark:text-slate-300 mb-1">δ = PL³ / (3EI)</p>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">
+          Deflection depends on the load (P), the beam's length (L), and its stiffness
+          (E times I — the material and cross-section combined).
+        </p>
 
         <svg id="beam-svg" viewBox="0 0 400 200" class="w-full max-w-md mb-4" role="img" aria-label="Diagram of a cantilever beam bending under load">
           <g stroke="currentColor" class="text-slate-500 dark:text-slate-400">
@@ -93,6 +101,7 @@
             Beam length 2&nbsp;m, stiffness (E·I) 30,000&nbsp;N·m² — a typical small steel beam section.
             Bending is drawn exaggerated (×5) so it's visible; the deflection value shown is exact.
           </p>
+          <p class="text-xs italic text-slate-400 dark:text-slate-500 mt-2">One slider. One visible bend. One honest number.</p>
         </div>
       </section>
     </main>
