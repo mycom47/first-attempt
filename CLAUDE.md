@@ -33,5 +33,6 @@ Guidance for Claude Code when working in this repository.
 ## Feature Plan
 
 - [x] Phase 1 — Shell & navigation: page scaffold, header with theme toggle (persisted via `localStorage`), nav with placeholder tool cards that open and close correctly.
-- [ ] Phase 2 — Real tool logic: implement actual functionality behind each placeholder card.
-- [ ] Phase 3 — Polish: refine styling, responsiveness, accessibility.
+- [x] Phase 2 — Beam Deflection tool: real cantilever beam simulator (SVG diagram that bends with the correct beam curve, load slider 0–500 N, live-calculated max deflection using `deflection = load * length^3 / (3 * stiffness)`).
+- [ ] Phase 3 — Remaining tool logic: Word Counter and JSON Formatter are still placeholders; implement their real functionality.
+- [ ] Phase 4 — Polish: refine styling, responsiveness, accessibility.

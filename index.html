@@ -37,6 +37,10 @@
         class="tool-nav-btn w-full text-left rounded-md px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800">
         JSON Formatter
       </button>
+      <button type="button" data-tool="beam-deflection"
+        class="tool-nav-btn w-full text-left rounded-md px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800">
+        Beam Deflection
+      </button>
     </nav>
 
     <main class="flex-1 p-6">
@@ -58,6 +62,38 @@
           <button type="button" class="close-card-btn text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" aria-label="Close">✕</button>
         </div>
         <p class="text-sm text-slate-500 dark:text-slate-400">Placeholder — tool logic not implemented yet.</p>
+      </section>
+
+      <section id="beam-deflection" data-tool-card class="hidden max-w-2xl rounded-lg border border-slate-200 dark:border-slate-700 p-5">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="font-medium">Beam Deflection</h2>
+          <button type="button" class="close-card-btn text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" aria-label="Close">✕</button>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Cantilever beam — fixed at one end, free at the other — under a point load at the free end.</p>
+
+        <svg id="beam-svg" viewBox="0 0 400 200" class="w-full max-w-md mb-4" role="img" aria-label="Diagram of a cantilever beam bending under load">
+          <g stroke="currentColor" class="text-slate-500 dark:text-slate-400">
+            <line x1="60" y1="50" x2="60" y2="140" stroke-width="4"/>
+            <line x1="60" y1="55" x2="46" y2="45" stroke-width="2"/>
+            <line x1="60" y1="70" x2="46" y2="60" stroke-width="2"/>
+            <line x1="60" y1="85" x2="46" y2="75" stroke-width="2"/>
+            <line x1="60" y1="100" x2="46" y2="90" stroke-width="2"/>
+            <line x1="60" y1="115" x2="46" y2="105" stroke-width="2"/>
+            <line x1="60" y1="130" x2="46" y2="120" stroke-width="2"/>
+          </g>
+          <path id="beam-path" d="" stroke="#2563eb" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <circle id="beam-tip" cx="320" cy="90" r="5" fill="#2563eb"/>
+        </svg>
+
+        <div class="flex flex-col gap-2 max-w-md">
+          <label for="load-slider" class="text-sm font-medium">Load: <span id="load-value">0</span> N</label>
+          <input id="load-slider" type="range" min="0" max="500" step="1" value="0" class="w-full">
+          <p class="text-sm">Max deflection: <span id="deflection-value" class="font-semibold">0.00</span> mm</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500">
+            Beam length 2&nbsp;m, stiffness (E·I) 30,000&nbsp;N·m² — a typical small steel beam section.
+            Bending is drawn exaggerated (×5) so it's visible; the deflection value shown is exact.
+          </p>
+        </div>
       </section>
     </main>
   </div>
@@ -118,6 +154,52 @@
       var closeBtn = card.querySelector('.close-card-btn');
       closeBtn.addEventListener('click', closeAll);
     });
+
+    // Beam deflection simulator
+    (function () {
+      var LENGTH_M = 2;        // beam length, meters (fixed)
+      var STIFFNESS = 30000;   // E * I, N·m² — typical small steel beam section (fixed)
+      var EXAGGERATION = 5;    // visual-only vertical exaggeration so bending is visible
+      var ORIGIN_X = 60, ORIGIN_Y = 90, BEAM_PX = 260;
+      var PX_PER_M = BEAM_PX / LENGTH_M;
+      var SEGMENTS = 24;
+
+      var slider = document.getElementById('load-slider');
+      var loadValueEl = document.getElementById('load-value');
+      var deflectionValueEl = document.getElementById('deflection-value');
+      var beamPath = document.getElementById('beam-path');
+      var beamTip = document.getElementById('beam-tip');
+
+      // Cantilever deflection at position x under a point load at the free end.
+      function deflectionAt(x, load) {
+        return (load * x * x * (3 * LENGTH_M - x)) / (6 * STIFFNESS);
+      }
+
+      function render(load) {
+        var points = [];
+        for (var i = 0; i <= SEGMENTS; i++) {
+          var x = (i / SEGMENTS) * LENGTH_M;
+          var v = deflectionAt(x, load);
+          var px = ORIGIN_X + x * PX_PER_M;
+          var py = ORIGIN_Y + v * PX_PER_M * EXAGGERATION;
+          points.push(px.toFixed(1) + ',' + py.toFixed(1));
+        }
+        beamPath.setAttribute('d', 'M ' + points.join(' L '));
+        var tip = points[points.length - 1].split(',');
+        beamTip.setAttribute('cx', tip[0]);
+        beamTip.setAttribute('cy', tip[1]);
+
+        var maxDeflectionMm = (load * Math.pow(LENGTH_M, 3) / (3 * STIFFNESS)) * 1000;
+        loadValueEl.textContent = load;
+        deflectionValueEl.textContent = maxDeflectionMm.toFixed(2);
+      }
+
+      slider.addEventListener('input', function () {
+        render(Number(slider.value));
+      });
+
+      render(Number(slider.value));
+    })();
   </script>
 </body>
 </html>
